@@ -1,9 +1,22 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, SafeAreaView, StyleSheet, Text, RefreshControl, Alert, View } from 'react-native';
-import FormulaireEnseignant from './src/components/FormulaireEnseignant';
-import ListeEnseignants from './src/components/ListeEnseignant';
-import GraphiqueCamembert from './src/components/GraphiqueCamembert';
-import { getEnseignants, addEnseignant, updateEnseignant, deleteEnseignant } from './src/api/api';
+import { useCallback, useEffect, useState } from "react";
+import {
+  Alert,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import {
+  addEnseignant,
+  deleteEnseignant,
+  getEnseignants,
+  updateEnseignant,
+} from "./src/api/api";
+import FormulaireEnseignant from "./src/components/FormulaireEnseignant";
+import GraphiqueCamembert from "./src/components/GraphiqueCamembert";
+import ListeEnseignants from "./src/components/ListeEnseignants";
 
 export default function App() {
   const [enseignants, setEnseignants] = useState([]);
@@ -15,11 +28,13 @@ export default function App() {
       const res = await getEnseignants();
       setEnseignants(res.data);
     } catch (err) {
-      Alert.alert('Erreur', 'Impossible de charger les données');
+      Alert.alert("Erreur", "Impossible de charger les données");
     }
   }, []);
 
-  useEffect(() => { chargerEnseignants(); }, []);
+  useEffect(() => {
+    chargerEnseignants();
+  }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -31,15 +46,18 @@ export default function App() {
     try {
       if (enseignantEdit) {
         await updateEnseignant(data.matricule, data);
-        Alert.alert('Succès', 'Enseignant modifié !');
+        Alert.alert("Succès", "Enseignant modifié !");
       } else {
         await addEnseignant(data);
-        Alert.alert('Succès', 'Enseignant ajouté !');
+        Alert.alert("Succès", "Enseignant ajouté !");
       }
       setEnseignantEdit(null);
       chargerEnseignants();
     } catch (err) {
-      Alert.alert('Erreur', err.response?.data?.error || 'Une erreur est survenue');
+      Alert.alert(
+        "Erreur",
+        err.response?.data?.error || "Une erreur est survenue",
+      );
     }
   };
 
@@ -48,7 +66,7 @@ export default function App() {
       await deleteEnseignant(matricule);
       chargerEnseignants();
     } catch (err) {
-      Alert.alert('Erreur', 'Suppression échouée');
+      Alert.alert("Erreur", "Suppression échouée");
     }
   };
 
@@ -57,7 +75,11 @@ export default function App() {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>👨‍🏫 Gestion des Enseignants</Text>
       </View>
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <FormulaireEnseignant
           onSubmit={handleSubmit}
           enseignantEdit={enseignantEdit}
@@ -75,7 +97,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#F5F5F5' },
-  header: { backgroundColor: '#3F51B5', padding: 16, alignItems: 'center' },
-  headerTitle: { color: '#fff', fontSize: 20, fontWeight: 'bold' }
+  safe: { flex: 1, backgroundColor: "#F5F5F5" },
+  header: { backgroundColor: "#3F51B5", padding: 16, alignItems: "center" },
+  headerTitle: { color: "#fff", fontSize: 20, fontWeight: "bold" },
 });

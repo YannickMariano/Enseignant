@@ -1,26 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import {
-  Alert,
-  RefreshControl,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import {
-  addEnseignant,
-  deleteEnseignant,
-  getEnseignants,
-  updateEnseignant,
-} from "../../src/api/api";
-import FormulaireEnseignant from "../../src/components/FormulaireEnseignant";
-import GraphiqueCamembert from "../../src/components/GraphiqueCamembert";
-import ListeEnseignants from "../../src/components/ListeEnseignant";
+  SafeAreaView, StyleSheet, Text, RefreshControl,
+  Alert, View, ScrollView
+} from 'react-native';
+import ListeEnseignants from '../../src/components/ListeEnseignants';
+import FormulaireModal from '../../src/components/FormulaireModal';
+import { getEnseignants, addEnseignant, updateEnseignant, deleteEnseignant } from '../../src/api/api';
 
 export default function HomeScreen() {
   const [enseignants, setEnseignants] = useState([]);
   const [enseignantEdit, setEnseignantEdit] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const chargerEnseignants = useCallback(async () => {
@@ -28,13 +18,11 @@ export default function HomeScreen() {
       const res = await getEnseignants();
       setEnseignants(res.data);
     } catch (err) {
-      Alert.alert("Erreur", "Impossible de charger les données");
+      Alert.alert('Erreur', 'Impossible de charger les données');
     }
   }, []);
 
-  useEffect(() => {
-    chargerEnseignants();
-  }, []);
+  useEffect(() => { chargerEnseignants(); }, []);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -42,22 +30,30 @@ export default function HomeScreen() {
     setRefreshing(false);
   };
 
+  const handleAdd = () => {
+    setEnseignantEdit(null);
+    setModalVisible(true);
+  };
+
+  const handleEdit = (enseignant: any) => {
+    setEnseignantEdit(enseignant);
+    setModalVisible(true);
+  };
+
   const handleSubmit = async (data: any) => {
     try {
       if (enseignantEdit) {
         await updateEnseignant((enseignantEdit as any).matricule, data);
-        Alert.alert("Succès", "Enseignant modifié !");
+        Alert.alert('✅ Succès', 'Enseignant modifié avec succès !');
       } else {
         await addEnseignant(data);
-        Alert.alert("Succès", "Enseignant ajouté !");
+        Alert.alert('✅ Succès', 'Enseignant ajouté avec succès !');
       }
+      setModalVisible(false);
       setEnseignantEdit(null);
       chargerEnseignants();
     } catch (err: any) {
-      Alert.alert(
-        "Erreur",
-        err.response?.data?.error || "Une erreur est survenue",
-      );
+      Alert.alert('❌ Erreur', err.response?.data?.error || 'Une erreur est survenue');
     }
   };
 
@@ -66,38 +62,50 @@ export default function HomeScreen() {
       await deleteEnseignant(matricule);
       chargerEnseignants();
     } catch (err) {
-      Alert.alert("Erreur", "Suppression échouée");
+      Alert.alert('Erreur', 'Suppression échouée');
     }
   };
 
   return (
     <SafeAreaView style={styles.safe}>
+      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>👨‍🏫 Gestion des Enseignants</Text>
+        <Text style={styles.headerSub}>{enseignants.length} enseignant(s) enregistré(s)</Text>
       </View>
+
+      {/* Contenu scrollable */}
       <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        contentContainerStyle={styles.scroll}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <FormulaireEnseignant
-          onSubmit={handleSubmit}
-          enseignantEdit={enseignantEdit}
-          onCancelEdit={() => setEnseignantEdit(null)}
-        />
         <ListeEnseignants
           enseignants={enseignants}
-          onEdit={setEnseignantEdit}
+          onAdd={handleAdd}
+          onEdit={handleEdit}
           onDelete={handleDelete}
         />
-        <GraphiqueCamembert enseignants={enseignants} />
       </ScrollView>
+
+      {/* Modal Formulaire */}
+      <FormulaireModal
+        visible={modalVisible}
+        enseignantEdit={enseignantEdit}
+        onSubmit={handleSubmit}
+        onClose={() => { setModalVisible(false); setEnseignantEdit(null); }}
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#F5F5F5" },
-  header: { backgroundColor: "#3F51B5", padding: 16, alignItems: "center" },
-  headerTitle: { color: "#fff", fontSize: 20, fontWeight: "bold" },
+  safe: { flex: 1, backgroundColor: '#F0F2FF' },
+  header: {
+    backgroundColor: '#3F51B5',
+    paddingTop: 16, paddingBottom: 20,
+    paddingHorizontal: 20,
+  },
+  headerTitle: { color: '#fff', fontSize: 22, fontWeight: '800' },
+  headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 4 },
+  scroll: { paddingBottom: 20 },
 });
