@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Remplacez par votre IP locale ou URL déployée
-const BASE_URL = "http://192.168.16.102:3000/api";
+const BASE_URL = "http://192.168.16.103:3000/api";
 
 export const getEnseignants = () => axios.get(`${BASE_URL}/enseignants`);
 export const addEnseignant = (data) =>

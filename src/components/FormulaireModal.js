@@ -8,7 +8,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
 export default function FormulaireModal({
@@ -88,7 +88,7 @@ export default function FormulaireModal({
             {/* Header */}
             <View style={styles.modalHeader}>
               <View style={styles.headerLeft}>
-                <Text style={styles.headerIcon}>{isEdit ? "✏️" : "➕"}</Text>
+                {/* <Text style={styles.headerIcon}>{isEdit ? "✏️" : "➕"}</Text> */}
                 <Text style={styles.headerTitle}>
                   {isEdit ? "Modifier enseignant" : "Nouvel enseignant"}
                 </Text>
@@ -181,9 +181,7 @@ export default function FormulaireModal({
                 !isNaN(tauxHoraire) &&
                 !isNaN(nombreHeures) && (
                   <View style={styles.preview}>
-                    <Text style={styles.previewLabel}>
-                      💰 Prestation calculée
-                    </Text>
+                    <Text style={styles.previewLabel}>Prestation calculée</Text>
                     <Text style={styles.previewValue}>
                       {(
                         parseFloat(tauxHoraire) * parseFloat(nombreHeures)

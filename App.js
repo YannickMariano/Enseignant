@@ -73,7 +73,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>👨‍🏫 Gestion des Enseignants</Text>
+        <Text style={styles.headerTitle}>Gestion des Enseignants</Text>
       </View>
       <ScrollView
         refreshControl={

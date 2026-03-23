@@ -110,7 +110,7 @@ export default function ChartScreen() {
     <SafeAreaView style={styles.safe}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>📊 Visualisation des Prestations</Text>
+        <Text style={styles.headerTitle}>Visualisation des Prestations</Text>
         <Text style={styles.headerSub}>{enseignants.length} enseignant(s)</Text>
       </View>
 
@@ -141,7 +141,7 @@ export default function ChartScreen() {
         <Text style={styles.sectionTitle}>Statistiques globales</Text>
         <View style={styles.statsRow}>
           <View style={[styles.statCard, { borderTopColor: "#3F51B5" }]}>
-            <Text style={styles.statEmoji}>💰</Text>
+            {/* <Text style={styles.statEmoji}>💰</Text> */}
             <Text style={styles.statLabel}>TOTAL</Text>
             <Text style={[styles.statValue, { color: "#3F51B5" }]}>
               {fmt(total)}
@@ -149,7 +149,7 @@ export default function ChartScreen() {
             <Text style={styles.statUnit}>Ar</Text>
           </View>
           <View style={[styles.statCard, { borderTopColor: "#e53935" }]}>
-            <Text style={styles.statEmoji}>📉</Text>
+            {/* <Text style={styles.statEmoji}>📉</Text> */}
             <Text style={styles.statLabel}>MINIMUM</Text>
             <Text style={[styles.statValue, { color: "#e53935" }]}>
               {fmt(min)}
@@ -157,7 +157,7 @@ export default function ChartScreen() {
             <Text style={styles.statUnit}>Ar</Text>
           </View>
           <View style={[styles.statCard, { borderTopColor: "#43a047" }]}>
-            <Text style={styles.statEmoji}>📈</Text>
+            {/* <Text style={styles.statEmoji}>📈</Text> */}
             <Text style={styles.statLabel}>MAXIMUM</Text>
             <Text style={[styles.statValue, { color: "#43a047" }]}>
               {fmt(max)}
